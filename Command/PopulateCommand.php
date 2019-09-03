@@ -166,8 +166,11 @@ class PopulateCommand extends BaseCommand
         $queryBuilder->from($entityName, 'e')->select('e');
 
         // Get entities
-        $entities = $queryBuilder->getQuery()->iterate();
-        $entityCount = $this->em->getRepository($entityName)->count([]);
+
+        $entityRepo= $this->em->getRepository($entityName);
+        $entities = $entityRepo->findAll();
+//        $entities = $queryBuilder->getQuery()->iterate();
+        $entityCount = $entityRepo->count([]);
 
         // Initialize progress bar
         $progress = new ProgressBar($this->output, $entityCount * count($indexes));
@@ -191,13 +194,13 @@ class PopulateCommand extends BaseCommand
                 // Get content
                 $formatter = $this->formatterManager->getFormatter($index->getFormatter());
                 $formatter->processOptions($index->getFormatterOptions());
-                $content = $formatter->getString($entity[0]->$fieldMethod());
+                $content = $formatter->getString($entity->$fieldMethod());
 
                 // Persist entry
                 if (!empty($content)) {
                     $entry = $indexQuery->setParameters([
                         'model' => $entityName,
-                        'foreignId' => $entity[0]->$idMethod(),
+                        'foreignId' => $entity->$idMethod(),
                         'field' => $field,
                     ])->getQuery()->getOneOrNullResult();
 
@@ -206,7 +209,7 @@ class PopulateCommand extends BaseCommand
                     }
 
                     $entry->setModel($entityName)
-                        ->setForeignId($entity[0]->$idMethod())
+                        ->setForeignId($entity->$idMethod())
                         ->setField($field)
                         ->setContent($content);
 
@@ -224,7 +227,7 @@ class PopulateCommand extends BaseCommand
                 }
                 $i ++;
             }
-            $this->em->detach($entity[0]);
+            $this->em->detach($entity);
         }
         $this->gc();
 
