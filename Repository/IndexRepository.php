@@ -130,7 +130,7 @@ class IndexRepository extends ServiceEntityRepository
     public function searchEntities($query, array $entities = [], array $fields = [])
     {
         $qb = $this->createQueryBuilder('i')
-            ->select('i.foreignId')
+            ->select('i.foreignId as id')
             ->addSelect("MATCH_AGAINST(i.content, :query) AS _matchQuote")
             ->addSelect("i.model")
             ->where("MATCH_AGAINST(i.content, :query) > :minScore")
