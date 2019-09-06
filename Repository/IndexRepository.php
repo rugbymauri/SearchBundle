@@ -129,19 +129,19 @@ class IndexRepository extends ServiceEntityRepository
      */
     public function searchEntities($query, array $entities = [], array $fields = [])
     {
-        $qb = $this->createQueryBuilder('i')
-            ->select('i.foreignId as id')
-            ->addSelect("MATCH_AGAINST(i.content, :query) AS _matchQuote")
-            ->addSelect("i.model")
-            ->where("MATCH_AGAINST(i.content, :query) > :minScore")
-            ->orWhere('i.content LIKE :queryWildcard')
-            ->groupBy('i.foreignId')
-            ->addGroupBy('_matchQuote')
-            ->addGroupBy('i.model')
-            ->addOrderBy('_matchQuote', 'DESC')
-            ->setParameter('query', $query)
-            ->setParameter('queryWildcard', '%'.$query.'%')
-            ->setParameter('minScore', round(strlen($query) * 0.8));
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('i.foreignId as id');
+        $qb->addSelect("MATCH_AGAINST(i.content, :query) AS _matchQuote");
+        $qb->addSelect("i.model");
+        $qb->where("MATCH_AGAINST(i.content, :query) > :minScore");
+        $qb->orWhere('i.content LIKE :queryWildcard');
+        $qb->groupBy('i.foreignId');
+        $qb->addGroupBy('_matchQuote');
+        $qb->addGroupBy('i.model');
+        $qb->addOrderBy('_matchQuote', 'DESC');
+        $qb->setParameter('query', $query);
+        $qb->setParameter('queryWildcard', '%'.$query.'%');
+        $qb->setParameter('minScore', round(strlen($query) * 0.8));
 
 
         $ors = $qb->expr()->orX();
@@ -162,33 +162,37 @@ class IndexRepository extends ServiceEntityRepository
                 ->setParameter('fieldName_' . $key, $field);
         };
 
-        // preSearch
-        $reflection = new \ReflectionClass($entity);
-        $annotationReader = new AnnotationReader();
+        foreach ($entities as $key => $entity) {
+            // preSearch
+            $reflection = new \ReflectionClass($entity);
+            $annotationReader = new AnnotationReader();
 
-        /** @var Searchable $searchableAnnotations */
-        $searchableAnnotations = $annotationReader->getClassAnnotation($reflection, Searchable::class);
+            /** @var Searchable $searchableAnnotations */
+            $searchableAnnotations = $annotationReader->getClassAnnotation($reflection, Searchable::class);
 
-        if ($searchableAnnotations) {
-            if ($class = $searchableAnnotations->getPreSearch()) {
-                if (class_exists($class)) {
-                    $reflection = new \ReflectionClass($class);
-                    if ($reflection->implementsInterface(PreSearchInterface::class)) {
-                        (new $class)->preSearch($qb, $query, $entity, $field);
+            if ($searchableAnnotations) {
+                if ($class = $searchableAnnotations->getPreSearch()) {
+                    if (class_exists($class)) {
+                        $reflection = new \ReflectionClass($class);
+                        if ($reflection->implementsInterface(PreSearchInterface::class)) {
+                            (new $class)->preSearch($qb, $query, $entity, null);
+                        }
                     }
                 }
             }
         }
 
-        $result = $qb->getQuery()->getScalarResult();
+        $result = $qb->getQuery()->getResult();
 
-        // postSearch
-        if ($searchableAnnotations) {
-            if ($class = $searchableAnnotations->getPostSearch()) {
-                if (class_exists($class)) {
-                    $reflection = new \ReflectionClass($class);
-                    if ($reflection->implementsInterface(PostSearchInterface::class)) {
-                        $result = (new $class)->postSearch($result, $query, $entity, $field);
+        foreach ($entities as $key => $entity) {
+            // postSearch
+            if ($searchableAnnotations) {
+                if ($class = $searchableAnnotations->getPostSearch()) {
+                    if (class_exists($class)) {
+                        $reflection = new \ReflectionClass($class);
+                        if ($reflection->implementsInterface(PostSearchInterface::class)) {
+                            $result = (new $class)->postSearch($result, $query, $entity, null);
+                        }
                     }
                 }
             }
