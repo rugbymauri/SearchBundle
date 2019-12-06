@@ -27,6 +27,7 @@
 
 namespace whatwedo\SearchBundle\Manager;
 
+use ReflectionClass;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManager;
@@ -90,7 +91,7 @@ class IndexManager
     public function getIndexesOfEntity($entity)
     {
         $fields = [];
-        $reflection = new \ReflectionClass($entity);
+        $reflection = new ReflectionClass($entity);
         $annotationReader = new AnnotationReader();
         foreach ($reflection->getProperties() as $property) {
             $annotation = $annotationReader->getPropertyAnnotation($property, Index::class);

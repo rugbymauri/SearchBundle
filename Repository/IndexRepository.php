@@ -27,6 +27,7 @@
 
 namespace whatwedo\SearchBundle\Repository;
 
+use ReflectionClass;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -79,7 +80,7 @@ class IndexRepository extends ServiceEntityRepository
         };
 
         // preSearch
-        $reflection = new \ReflectionClass($entity);
+        $reflection = new ReflectionClass($entity);
         $annotationReader = new AnnotationReader();
 
         /** @var Searchable $searchableAnnotations */
@@ -88,7 +89,7 @@ class IndexRepository extends ServiceEntityRepository
         if ($searchableAnnotations) {
             if ($class = $searchableAnnotations->getPreSearch()) {
                 if (class_exists($class)) {
-                    $reflection = new \ReflectionClass($class);
+                    $reflection = new ReflectionClass($class);
                     if ($reflection->implementsInterface(PreSearchInterface::class)) {
                         (new $class)->preSearch($qb, $query, $entity, $field);
                     }
@@ -102,7 +103,7 @@ class IndexRepository extends ServiceEntityRepository
         if ($searchableAnnotations) {
             if ($class = $searchableAnnotations->getPostSearch()) {
                 if (class_exists($class)) {
-                    $reflection = new \ReflectionClass($class);
+                    $reflection = new ReflectionClass($class);
                     if ($reflection->implementsInterface(PostSearchInterface::class)) {
                         $result = (new $class)->postSearch($result, $query, $entity, $field);
                     }
@@ -164,7 +165,7 @@ class IndexRepository extends ServiceEntityRepository
 
         foreach ($entities as $key => $entity) {
             // preSearch
-            $reflection = new \ReflectionClass($entity);
+            $reflection = new ReflectionClass($entity);
             $annotationReader = new AnnotationReader();
 
             /** @var Searchable $searchableAnnotations */
@@ -173,7 +174,7 @@ class IndexRepository extends ServiceEntityRepository
             if ($searchableAnnotations) {
                 if ($class = $searchableAnnotations->getPreSearch()) {
                     if (class_exists($class)) {
-                        $reflection = new \ReflectionClass($class);
+                        $reflection = new ReflectionClass($class);
                         if ($reflection->implementsInterface(PreSearchInterface::class)) {
                             (new $class)->preSearch($qb, $query, $entity, null);
                         }
@@ -189,7 +190,7 @@ class IndexRepository extends ServiceEntityRepository
             if ($searchableAnnotations) {
                 if ($class = $searchableAnnotations->getPostSearch()) {
                     if (class_exists($class)) {
-                        $reflection = new \ReflectionClass($class);
+                        $reflection = new ReflectionClass($class);
                         if ($reflection->implementsInterface(PostSearchInterface::class)) {
                             $result = (new $class)->postSearch($result, $query, $entity, null);
                         }

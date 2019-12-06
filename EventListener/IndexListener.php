@@ -27,6 +27,7 @@
 
 namespace whatwedo\SearchBundle\EventListener;
 
+use ReflectionMethod;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\DBAL\Statement;
@@ -141,7 +142,7 @@ class IndexListener implements EventSubscriber
         $em = $args->getObjectManager();
         if (is_null($this->indexInsertStmt)) {
             $indexPersister = $em->getUnitOfWork()->getEntityPersister(Index::class);
-            $rmIndexInsertSQL = new \ReflectionMethod($indexPersister, 'getInsertSQL');
+            $rmIndexInsertSQL = new ReflectionMethod($indexPersister, 'getInsertSQL');
             $rmIndexInsertSQL->setAccessible(true);
             $this->indexInsertStmt = $em->getConnection()->prepare($rmIndexInsertSQL->invoke($indexPersister));
             $this->indexUpdateStmt = $em->getConnection()->prepare(

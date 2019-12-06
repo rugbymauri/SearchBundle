@@ -97,7 +97,7 @@ class PopulateCommand extends BaseCommand
     {
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Initialize command
         parent::execute($input, $output);
@@ -143,6 +143,7 @@ class PopulateCommand extends BaseCommand
 
         // Tear down
         $this->tearDown();
+        return 0;
     }
 
     /**

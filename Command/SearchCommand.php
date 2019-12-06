@@ -99,7 +99,7 @@ class SearchCommand extends BaseCommand
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Initialize command
         parent::execute($input, $output);
@@ -122,6 +122,7 @@ class SearchCommand extends BaseCommand
         }
 
         $table->render();
+        return 0;
     }
 
 }
