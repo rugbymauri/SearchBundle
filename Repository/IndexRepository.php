@@ -27,6 +27,7 @@
 
 namespace whatwedo\SearchBundle\Repository;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use ReflectionClass;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -44,9 +45,9 @@ use function Doctrine\ORM\QueryBuilder;
 class IndexRepository extends ServiceEntityRepository
 {
     /**
-     * @param RegistryInterface $registry
+     * @param \Doctrine\Common\Persistence\ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Index::class);
     }
