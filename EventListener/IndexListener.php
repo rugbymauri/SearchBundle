@@ -29,7 +29,7 @@ namespace whatwedo\SearchBundle\EventListener;
 
 use ReflectionMethod;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Persisters\Entity\EntityPersister;
 use whatwedo\CoreBundle\Manager\FormatterManager;

@@ -27,7 +27,7 @@
 
 namespace whatwedo\SearchBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -53,7 +53,7 @@ class PopulateCommand extends BaseCommand
     protected $em;
 
     /**
-     * @var \Doctrine\Common\Persistence\ManagerRegistry
+     * @var \Doctrine\Persistence\ManagerRegistry
      */
     protected $doctrine;
 
@@ -69,7 +69,7 @@ class PopulateCommand extends BaseCommand
 
     /**
      * PopulateCommand constructor.
-     * @param \Doctrine\Common\Persistence\ManagerRegistry $doctrine
+     * @param \Doctrine\Persistence\ManagerRegistry $doctrine
      * @param IndexManager $indexManager
      * @param FormatterManager $formatterManager
      */

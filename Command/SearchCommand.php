@@ -27,7 +27,7 @@
 
 namespace whatwedo\SearchBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Socius\Entity\Member;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -57,7 +57,7 @@ class SearchCommand extends BaseCommand
     protected $em;
 
     /**
-     * @var \Doctrine\Common\Persistence\ManagerRegistry
+     * @var \Doctrine\Persistence\ManagerRegistry
      */
     protected $doctrine;
 
@@ -73,7 +73,7 @@ class SearchCommand extends BaseCommand
 
     /**
      * PopulateCommand constructor.
-     * @param \Doctrine\Common\Persistence\ManagerRegistry $doctrine
+     * @param \Doctrine\Persistence\ManagerRegistry $doctrine
      * @param IndexManager $indexManager
      * @param FormatterManager $formatterManager
      */
