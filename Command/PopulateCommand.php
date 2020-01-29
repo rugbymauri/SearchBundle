@@ -46,6 +46,7 @@ use whatwedo\SearchBundle\Manager\IndexManager;
  */
 class PopulateCommand extends BaseCommand
 {
+    protected static $defaultName = 'whatwedo:search:populate';
 
     /**
      * @var EntityManager
