@@ -56,19 +56,12 @@ class IndexListener implements EventSubscriber
     protected $indexUpdateStmt;
 
     /**
-     * @var FormatterManager $formatterManager
-     */
-    protected $formatterManager;
-
-    /**
      * IndexListener constructor.
      * @param IndexManager $indexManager
-     * @param FormatterManager $formatterManager
      */
-    public function __construct(IndexManager $indexManager, FormatterManager $formatterManager)
+    public function __construct(IndexManager $indexManager)
     {
         $this->indexManager = $indexManager;
-        $this->formatterManager = $formatterManager;
     }
 
     /**
@@ -176,9 +169,8 @@ class IndexListener implements EventSubscriber
             /** @var \whatwedo\SearchBundle\Annotation\Index $index */
             foreach ($indexes as $field => $index) {
                 $fieldMethod = $this->indexManager->getFieldAccessorMethod($class, $field);
-                $formatter = $this->formatterManager->getFormatter($index->getFormatter());
-                $formatter->processOptions($index->getFormatterOptions());
-                $content = $formatter->getString($entity->$fieldMethod());
+                $content = $entity->$fieldMethod();
+
                 if (!empty($content)) {
                     $entry = $em->getRepository('whatwedoSearchBundle:Index')->findExisting($class, $field, $entity->$idMethod());
                     if (!$entry) {
